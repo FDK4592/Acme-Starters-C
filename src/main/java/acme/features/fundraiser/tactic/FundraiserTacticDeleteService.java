@@ -1,3 +1,4 @@
+
 package acme.features.fundraiser.tactic;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,7 @@ import acme.client.components.models.Tuple;
 import acme.client.components.views.SelectChoices;
 import acme.client.services.AbstractService;
 import acme.entities.strategy.Fundraiser;
+import acme.entities.strategy.Strategy;
 import acme.entities.strategy.Tactic;
 import acme.entities.strategy.TacticKind;
 
@@ -29,23 +31,22 @@ public class FundraiserTacticDeleteService extends AbstractService<Fundraiser, T
 
 	@Override
 	public void authorise() {
-		boolean status;
-
-		status = this.tactic != null && this.tactic.getStrategy().getDraftMode() && this.tactic.getStrategy().getFundraiser().isPrincipal();
-
-		super.setAuthorised(status);
+		Boolean res = false;
+		if (this.tactic != null && this.tactic.getStrategy() != null) {
+			int strategyId = this.tactic.getStrategy().getId();
+			Strategy strategy = this.repository.findStrategyById(strategyId);
+			res = strategy != null && strategy.getDraftMode().equals(true) && strategy.getFundraiser().isPrincipal();
+		}
+		super.setAuthorised(res);
 	}
 
 	@Override
 	public void bind() {
-		super.bindObject(this.tactic, "name", "notes", "expectedPercentage", "kind")
-		;
+		super.bindObject(this.tactic, "name", "notes", "expectedPercentage", "kind");
 	}
 
 	@Override
 	public void validate() {
-		super.validateObject(this.tactic)
-		;
 	}
 
 	@Override
