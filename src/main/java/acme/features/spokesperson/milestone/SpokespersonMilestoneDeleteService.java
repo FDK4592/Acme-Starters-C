@@ -43,7 +43,6 @@ public class SpokespersonMilestoneDeleteService extends AbstractService<Spokespe
 
 	@Override
 	public void validate() {
-		super.validateObject(this.milestone);
 		;
 	}
 
@@ -60,7 +59,7 @@ public class SpokespersonMilestoneDeleteService extends AbstractService<Spokespe
 		choices = SelectChoices.from(MilestoneKind.class, this.milestone.getKind());
 
 		tuple = super.unbindObject(this.milestone, "title", "achievements", "effort", "kind");
-		tuple.put("campaignId", super.getRequest().getData("campaignId", int.class));
+		tuple.put("campaignId", this.milestone.getCampaign().getId());
 		tuple.put("draftMode", this.milestone.getCampaign().getDraftMode());
 		tuple.put("kinds", choices);
 	}
