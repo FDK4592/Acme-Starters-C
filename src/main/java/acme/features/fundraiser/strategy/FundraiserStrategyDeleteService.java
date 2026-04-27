@@ -44,7 +44,6 @@ public class FundraiserStrategyDeleteService extends AbstractService<Fundraiser,
 
 	@Override
 	public void validate() {
-		super.validateObject(this.strategy);
 	}
 
 	@Override
